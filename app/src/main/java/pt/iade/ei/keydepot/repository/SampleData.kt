@@ -1,0 +1,68 @@
+package pt.iade.ei.keydepot.repository
+
+import pt.iade.ei.keydepot.model.Game
+import pt.iade.ei.keydepot.model.StoreItem
+
+object SampleData {
+
+    val games = listOf(
+        Game(
+            id = "g1",
+            title = "Shadowfall",
+            subtitle = "Action RPG",
+            coverRes = android.R.drawable.ic_menu_gallery,   // imagem padrão
+            items = listOf(
+                StoreItem(
+                    id = "g1i1",
+                    name = "Dragon Sword",
+                    description = "Espada lendária que aumenta +50 ATK.",
+                    price = 4.99,
+                    iconRes = android.R.drawable.ic_menu_info_details
+                ),
+                StoreItem(
+                    id = "g1i2",
+                    name = "XP Boost (7 dias)",
+                    description = "Aumenta XP ganho por 7 dias.",
+                    price = 2.99,
+                    iconRes = android.R.drawable.ic_menu_info_details
+                ),
+                StoreItem(
+                    id = "g1i3",
+                    name = "Skin Phantom",
+                    description = "Skin exclusiva com efeito brilhante.",
+                    price = 1.99,
+                    iconRes = android.R.drawable.ic_menu_info_details
+                )
+            )
+        ),
+        Game(
+            id = "g2",
+            title = "Starfront",
+            subtitle = "Sci-Fi Strategy",
+            coverRes = android.R.drawable.ic_menu_gallery,   // imagem padrão
+            items = listOf(
+                StoreItem(
+                    id = "g2i1",
+                    name = "Fleet Pack",
+                    description = "5 naves de elite para dominar o espaço.",
+                    price = 6.99,
+                    iconRes = android.R.drawable.ic_menu_info_details
+                ),
+                StoreItem(
+                    id = "g2i2",
+                    name = "Resource Pack",
+                    description = "10.000 créditos de recursos.",
+                    price = 3.49,
+                    iconRes = android.R.drawable.ic_menu_info_details
+                ),
+                StoreItem(
+                    id = "g2i3",
+                    name = "Commander Skin",
+                    description = "Skin especial do comandante.",
+                    price = 2.49,
+                    iconRes = android.R.drawable.ic_menu_info_details
+                )
+            )
+        )
+    )
+}
