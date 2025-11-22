@@ -1,5 +1,6 @@
 package pt.iade.ei.keydepot
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -54,9 +56,9 @@ fun GameListScreen(games: List<Game>) {
     ) {
         items(games) { game ->
             GameCard(game = game, onClick = {
-                //val intent = Intent(context, GameDetailActivity::class.java)
-                //intent.putExtra("game",game)
-                //context.startActivity(intent)
+                val intent = Intent(context, GameDetailActivity::class.java)
+                intent.putExtra("game",game)
+                context.startActivity(intent)
             })
             Spacer(
                 modifier = Modifier
