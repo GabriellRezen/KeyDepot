@@ -1,10 +1,12 @@
 package pt.iade.ei.keydepot
 
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,12 +14,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import pt.iade.ei.keydepot.model.Game
 import pt.iade.ei.keydepot.model.StoreItem
 import pt.iade.ei.keydepot.repository.SampleData
@@ -54,7 +60,7 @@ fun GameDetailScreen(game : Game) {
                 onBuy = {
                     Toast.makeText(
                         context,
-                        "Acabou de comprar o item ${selectedItem!!.name} por $${selectedItem!!.price}",
+                        "Comprou ${selectedItem!!.name} por $${selectedItem!!.price}",
                         Toast.LENGTH_LONG
                     ).show()
                     selectedItem = null
@@ -63,51 +69,128 @@ fun GameDetailScreen(game : Game) {
         }
     }
 
-    Column {
-        Image(
-            painter = painterResource(id = game.coverRes),
-            contentDescription = game.title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(240.dp),
-            contentScale = ContentScale.Crop
-        )
+    LazyColumn (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
 
-        Text(
-            text = game.title,
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(12.dp)
-        )
-
-        Text(
-            text = game.subtitle,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(horizontal = 12.dp)
-        )
-
-        Spacer(
-            modifier = Modifier
-                .height(12.dp)
-        )
-
-        LazyColumn {
-            items(game.items) { item ->
-                ListItem(
-                    headlineContent = { Text(item.name) },
-                    supportingContent = { Text("$${item.price}") },
-                    leadingContent = {
-                        Image(
-                            painter = painterResource(id = item.iconRes),
-                            contentDescription = item.name,
-                            modifier = Modifier
-                                .size(40.dp)
-                        )
-                    },
+        item {
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = android.R.drawable.ic_media_previous),
+                    contentDescription = "Back",
                     modifier = Modifier
-                        .clickable{ selectedItem = item}
+                        .size(28.dp)
+                        .clickable { }
                 )
-                HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
+
+                Spacer(modifier = Modifier
+                    .width(12.dp))
+
+                Text(
+                    text = game.title,
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Spacer(modifier = Modifier
+                    .weight(1f))
+
+                Icon(
+                    painter = painterResource(id = android.R.drawable.btn_star_big_off),
+                    contentDescription = "Favorito",
+                    modifier = Modifier
+                        .size(26.dp)
+                )
             }
+
+            Spacer(modifier = Modifier
+                .height(12.dp))
+        }
+
+        item {
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(Color(0xFFE2E2E2))
+                    .padding(16.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(110.dp)
+                        .background(Color(0xFFCCCCCC)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Game\nimage", fontSize = 14.sp)
+                }
+
+                Spacer(modifier = Modifier
+                    .width(16.dp))
+
+                Text(
+                    text = game.subtitle,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            Spacer(modifier = Modifier
+                .height(22.dp))
+        }
+
+        item {
+            Text(
+                text = "Itens Compráveis",
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Spacer(modifier = Modifier
+                .height(12.dp))
+        }
+
+        items(game.items) { item ->
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { selectedItem = item }
+                    .padding(vertical = 12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(90.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(Color(0xFFCCCCCC)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Item\nImage", fontSize = 14.sp)
+                }
+
+                Spacer(modifier = Modifier
+                    .width(12.dp))
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    Text(item.name, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        item.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 2
+                    )
+                }
+
+                Text(
+                    "$${item.price}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+
+            HorizontalDivider()
         }
     }
 }
@@ -116,34 +199,54 @@ fun GameDetailScreen(game : Game) {
 fun BottomSheetContent(item: StoreItem, onBuy: () -> Unit) {
     Column (
         modifier = Modifier
-            .padding(20.dp)
+            .padding(22.dp)
     ) {
-        Text(
-            text = item.name,
-            style = MaterialTheme.typography.headlineSmall
-        )
+       Row {
+           Box(
+               modifier = Modifier
+                   .size(110.dp)
+                   .clip(MaterialTheme.shapes.medium)
+                   .background(Color(0xFFCCCCCC)),
+               contentAlignment = Alignment.Center
+           ) {
+               Text("Item\nImage", fontSize = 14.sp)
+           }
 
-        Spacer(
-            modifier = Modifier
-                .height(8.dp)
-        )
+           Spacer(modifier = Modifier
+               .width(16.dp))
 
-        Text(
-            text = item.description,
-            style = MaterialTheme.typography.bodyMedium
-        )
+           Column {
+               Text(
+                   text = item.name,
+                   style = MaterialTheme.typography.titleLarge
+               )
+               Text(
+                   text = item.description,
+                   style = MaterialTheme.typography.bodyMedium
+               )
+           }
+       }
 
-        Spacer(
-            modifier = Modifier
-                .height(16.dp)
-        )
+        Spacer(modifier = Modifier
+            .height(24.dp))
 
-        Button(
-            onClick = onBuy,
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Text("Compra por $${item.price}")
+            Text(
+                text = "$${item.price}",
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier
+                    .weight(1f)
+            )
+            Button(
+                onClick = onBuy,
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text("Compre com 1-click")
+            }
         }
     }
 }
