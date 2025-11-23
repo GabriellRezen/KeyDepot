@@ -24,9 +24,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,12 +43,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pt.iade.ei.keydepot.model.Game
 import pt.iade.ei.keydepot.repository.SampleData
 import pt.iade.ei.keydepot.ui.theme.KeyDepotTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,9 +115,10 @@ fun TopBar() {
 fun Tittle() {
     Text(
         text = "KeyDepot",
-        fontSize = 28.sp,
+        fontSize = 30.sp,
+        fontWeight = FontWeight.SemiBold,
         modifier = Modifier
-            .padding(start = 16.dp, bottom = 16.dp),
+            .padding(start = 18.dp, bottom = 16.dp),
         color = Color.Black
     )
 }
@@ -189,7 +194,7 @@ fun BottomBar() {
             selected = true,
             onClick = {},
             icon = {
-                Icon(Icons.Outlined.Notifications,
+                Icon(Icons.Outlined.Star,
                     contentDescription = null ) },
             label = { Text("Destaques") }
         )
@@ -198,7 +203,7 @@ fun BottomBar() {
             selected = false,
             onClick = {},
             icon = {
-                Icon(Icons.Outlined.Settings,
+                Icon(Icons.Filled.Archive,
                     contentDescription = null ) },
             label = { Text("Histórico") }
         )
