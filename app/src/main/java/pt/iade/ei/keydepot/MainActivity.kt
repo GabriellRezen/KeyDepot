@@ -6,7 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,17 +21,28 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import pt.iade.ei.keydepot.model.Game
 import pt.iade.ei.keydepot.repository.SampleData
 import pt.iade.ei.keydepot.ui.theme.KeyDepotTheme
@@ -40,26 +54,84 @@ class MainActivity : ComponentActivity() {
         val games = SampleData.games
 
         setContent {
-            GameListScreen(games = games)
+            MainScreen(games)
         }
     }
 }
 
 @Composable
-fun GameListScreen(games: List<Game>) {
+fun MainScreen(games: List<Game>) {
+    Scaffold (
+        bottomBar = {BottomBar() },
+        containerColor = Color(0xFFF2E9F5)
+    ) { padding ->
+
+        Column (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .background(Color(0xFFF2E9F5)))
+        {
+            TopBar()
+            Tittle()
+            GameList(games)
+        }
+    }
+}
+
+@Composable
+fun TopBar() {
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.End
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Notifications,
+            contentDescription = null,
+            modifier = Modifier
+                .size(26.dp)
+        )
+        Spacer(
+            modifier = Modifier
+                .width(16.dp)
+        )
+        Icon(
+            imageVector = Icons.Outlined.Settings,
+            contentDescription = null,
+            modifier = Modifier
+                .size(26.dp)
+        )
+    }
+}
+
+@Composable
+fun Tittle() {
+    Text(
+        text = "KeyDepot",
+        fontSize = 28.sp,
+        modifier = Modifier
+            .padding(start = 16.dp, bottom = 16.dp),
+        color = Color.Black
+    )
+}
+
+@Composable
+fun GameList(games: List<Game>) {
     val context = LocalContext.current
 
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp)
     ) {
         items(games) { game ->
-            GameCard(game = game, onClick = {
+            GameCard(game) {
                 val intent = Intent(context, GameDetailActivity::class.java)
                 intent.putExtra("game",game)
                 context.startActivity(intent)
-            })
+            }
             Spacer(
                 modifier = Modifier
                     .height(12.dp)
@@ -73,42 +145,63 @@ fun GameCard(game: Game, onClick: () -> Unit){
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
+            .height(180.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(16.dp)
     ) {
-        Row(
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onClick() }
+                .fillMaxSize()
+                .background(Color(0xFFD6D6D6))
         ) {
-           Row(
-               modifier = Modifier.padding(12.dp)
-           ) {
-               Image(
-                   painter = painterResource(id = game.coverRes),
-                   contentDescription = game.title,
-                   modifier = Modifier
-                       .size(90.dp),
-                   contentScale = ContentScale.Crop
-               )
-
-               Spacer(
-                   modifier = Modifier
-                       .width(12.dp)
-               )
-
-               Column {
-                   Text(
-                       text = game.title,
-                       style = MaterialTheme.typography.titleLarge
-                   )
-                   Text(
-                       text = game.subtitle,
-                       style = MaterialTheme.typography.bodyMedium
-                   )
-               }
-           }
+            Text(
+                text = game.title,
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(12.dp)
+            )
         }
     }
+}
+
+@Composable
+fun BottomBar() {
+    NavigationBar (containerColor = Color(0xFFF2E9F5)) {
+
+        NavigationBarItem(
+            selected = true,
+            onClick = {},
+            icon = {
+                Icon(Icons.Outlined.Notifications,
+                    contentDescription = null ) },
+            label = { Text("Destaques") }
+        )
+
+        NavigationBarItem(
+            selected = false,
+            onClick = {},
+            icon = {
+                Icon(Icons.Outlined.Settings,
+                    contentDescription = null ) },
+            label = { Text("Histórico") }
+        )
+
+        NavigationBarItem(
+            selected = false,
+            onClick = {},
+            icon = {
+                Icon(Icons.Outlined.Person,
+                    contentDescription = null ) },
+            label = { Text("Perfil") }
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun PreviewMain() {
+    MainScreen(games = SampleData.games)
 }
 
 @Preview(showBackground = true)
@@ -122,5 +215,23 @@ fun PreviewGameCard() {
 @Composable
 fun PreviewGameListScreen(){
     val games = SampleData.games
-    GameListScreen(games = games)
+    GameList(games = games)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewTopBar() {
+    TopBar()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewBottomBar() {
+    BottomBar()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewTitle() {
+    Tittle()
 }
