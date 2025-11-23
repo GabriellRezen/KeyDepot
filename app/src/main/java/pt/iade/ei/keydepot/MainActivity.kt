@@ -34,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,14 +69,14 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(games: List<Game>) {
     Scaffold (
         bottomBar = {BottomBar() },
-        containerColor = Color(0xFFF2E9F5)
+        containerColor = Color(0xFF1B2838)
     ) { padding ->
 
         Column (
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .background(Color(0xFFF2E9F5)))
+                .background(Color(0xFF1B2838)))
         {
             TopBar()
             Tittle()
@@ -89,12 +90,14 @@ fun TopBar() {
     Row (
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color(0xFF1B2838))
             .padding(16.dp),
         horizontalArrangement = Arrangement.End
     ) {
         Icon(
             imageVector = Icons.Outlined.Notifications,
             contentDescription = null,
+            tint = Color.White,
             modifier = Modifier
                 .size(26.dp)
         )
@@ -105,6 +108,7 @@ fun TopBar() {
         Icon(
             imageVector = Icons.Outlined.Settings,
             contentDescription = null,
+            tint = Color.White,
             modifier = Modifier
                 .size(26.dp)
         )
@@ -119,7 +123,7 @@ fun Tittle() {
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier
             .padding(start = 18.dp, bottom = 16.dp),
-        color = Color.Black
+        color = Color(0xFFC6D4DF)
     )
 }
 
@@ -130,6 +134,7 @@ fun GameList(games: List<Game>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color(0xFF1B2838))
             .padding(horizontal = 12.dp)
     ) {
         items(games) { game ->
@@ -152,6 +157,7 @@ fun GameCard(game: Game, onClick: () -> Unit){
         modifier = Modifier
             .fillMaxWidth()
             .height(180.dp)
+            .background(Color(0xFF1B2838))
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -188,7 +194,7 @@ fun GameCard(game: Game, onClick: () -> Unit){
 
 @Composable
 fun BottomBar() {
-    NavigationBar (containerColor = Color(0xFFF2E9F5)) {
+    NavigationBar (containerColor = Color(0xFF171A21)) {
 
         NavigationBarItem(
             selected = true,
@@ -196,7 +202,14 @@ fun BottomBar() {
             icon = {
                 Icon(Icons.Outlined.Star,
                     contentDescription = null ) },
-            label = { Text("Destaques") }
+            label = { Text("Destaques") },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color.White,
+                unselectedIconColor = Color.White,
+                selectedTextColor = Color.White,
+                unselectedTextColor = Color.White,
+                indicatorColor = Color(0xFF66C0F4)
+            )
         )
 
         NavigationBarItem(
@@ -205,7 +218,14 @@ fun BottomBar() {
             icon = {
                 Icon(Icons.Filled.Archive,
                     contentDescription = null ) },
-            label = { Text("Histórico") }
+            label = { Text("Histórico") },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color.White,
+                unselectedIconColor = Color.White,
+                selectedTextColor = Color.White,
+                unselectedTextColor = Color.White,
+                indicatorColor = Color(0xFF66C0F4)
+            )
         )
 
         NavigationBarItem(
@@ -214,7 +234,14 @@ fun BottomBar() {
             icon = {
                 Icon(Icons.Outlined.Person,
                     contentDescription = null ) },
-            label = { Text("Perfil") }
+            label = { Text("Perfil") },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color.White,
+                unselectedIconColor = Color.White,
+                selectedTextColor = Color.White,
+                unselectedTextColor = Color.White,
+                indicatorColor = Color(0xFF66C0F4)
+            )
         )
     }
 }
