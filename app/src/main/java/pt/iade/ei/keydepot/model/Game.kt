@@ -8,7 +8,7 @@ data class Game(
     val id: String,
     val title: String,
     val subtitle: String,
-    val coverRes: Int = android.R.drawable.ic_menu_gallery,
+    val coverRes: Int,
     val items: List<StoreItem>
 ) : Parcelable
 

@@ -1,5 +1,6 @@
 package pt.iade.ei.keydepot.repository
 
+import pt.iade.ei.keydepot.R
 import pt.iade.ei.keydepot.model.Game
 import pt.iade.ei.keydepot.model.StoreItem
 
@@ -8,9 +9,9 @@ object SampleData {
     val games = listOf(
         Game(
             id = "g1",
-            title = "Shadowfall",
-            subtitle = "Action RPG",
-            coverRes = android.R.drawable.ic_menu_gallery,   // imagem padrão
+            title = "Sid Meier’s Civilization® VI",
+            subtitle = "Expanda seu império, avance sua cultura e vá de encontro aos maiores líderes da história. Será que sua civilização sobreviverá ao teste do tempo?",
+            coverRes = R.drawable.civilization_iv_banner,
             items = listOf(
                 StoreItem(
                     id = "g1i1",
@@ -37,9 +38,9 @@ object SampleData {
         ),
         Game(
             id = "g2",
-            title = "Starfront",
-            subtitle = "Sci-Fi Strategy",
-            coverRes = android.R.drawable.ic_menu_gallery,   // imagem padrão
+            title = "Vampire Survivors",
+            subtitle = "Acabe com milhares de criaturas noturnas e sobreviva até o amanhecer! ",
+            coverRes = R.drawable.vampire_survivors_banner,
             items = listOf(
                 StoreItem(
                     id = "g2i1",

@@ -1,6 +1,7 @@
 package pt.iade.ei.keydepot
 
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -152,11 +153,26 @@ fun GameCard(game: Game, onClick: () -> Unit){
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFD6D6D6))
         ) {
+            Image(
+                painter = painterResource(id = game.coverRes),
+                contentDescription = game.title,
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Color.Black.copy(alpha = 0.35f)
+                    )
+            )
             Text(
                 text = game.title,
                 fontSize = 20.sp,
+                color = Color.White,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(12.dp)
