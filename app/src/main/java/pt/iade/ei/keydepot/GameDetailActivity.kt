@@ -32,14 +32,14 @@ import pt.iade.ei.keydepot.model.StoreItem
 import pt.iade.ei.keydepot.repository.SampleData
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.ui.text.style.TextOverflow
 
 
 class GameDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val game = intent.getParcelableExtra<Game>("game")
-            ?: return
+        val game = intent.getParcelableExtra<Game>("game") ?: return
 
         setContent {
             GameDetailScreen(game = game)
@@ -51,20 +51,13 @@ class GameDetailActivity : ComponentActivity() {
 @Composable
 fun GameDetailScreen(game : Game) {
     val context = LocalContext.current
-
     var selectedItem by remember { mutableStateOf<StoreItem?>(null) }
-
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF1B2838))
-    ) {
 
     if (selectedItem != null) {
         ModalBottomSheet(
             sheetState = sheetState,
+            containerColor = Color(0xFF171A21),
             onDismissRequest = { selectedItem = null }
         ) {
             BottomSheetContent(
@@ -80,64 +73,58 @@ fun GameDetailScreen(game : Game) {
             )
         }
     }
+    Scaffold (
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF1B2838),
+                    navigationIconContentColor = Color.White,
+                    titleContentColor = Color.White,
+                    actionIconContentColor = Color.White
+                ),
+                title = {
+                    Text(text = game.title, fontSize = 20.sp)
+                },
+                navigationIcon = {
+                    IconButton(onClick = { (context as? ComponentActivity)?.finish() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = "Voltar"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { }) {
+                        Icon(
+                            imageVector = Icons.Outlined.FavoriteBorder,
+                            contentDescription = "Favorito"
+                        )
+                    }
+                }
+            )
+        },
+        containerColor = Color(0xFF1B2838)
+    ) { innerPadding ->
 
-    LazyColumn (
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 20.dp, vertical = 12.dp)
-    ) {
-        item {
-            Row (
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 20.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = "Voltar",
+        LazyColumn (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp, vertical = 16.dp)
+        ) {
+            item {
+                Row (
                     modifier = Modifier
-                        .size(28.dp)
-                        .clickable{ (context as? ComponentActivity)?.finish() },
-                    tint = Color.White
-                )
-
-                Spacer(modifier = Modifier
-                    .width(12.dp))
-
-                Text(
-                    text = game.title,
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 22.sp)
-                )
-
-                Spacer(modifier = Modifier
-                    .weight(1f))
-
-                Icon(
-                    imageVector = Icons.Outlined.FavoriteBorder,
-                    contentDescription = "Favorito",
-                    modifier = Modifier
-                        .size( 28.dp),
-                    tint = Color.White
-                )
-            }
-        }
-
-        item {
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(18.dp))
-                    .background(Color(0xFF1B2838))
-                    .padding(18.dp)
+                        .fillMaxWidth()
+                        .padding(12.dp)
             ) {
                 Image(
                     painter = painterResource(id = game.coverRes),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(110.dp)
-                        .clip(RoundedCornerShape(14.dp)),
+                        .weight(0.65f)
+                        .aspectRatio(16f / 9f)
+                        .clip(RoundedCornerShape(16.dp)),
                     contentScale = ContentScale.Crop
                 )
 
@@ -147,15 +134,13 @@ fun GameDetailScreen(game : Game) {
                 Text(
                     text = game.subtitle,
                     color = Color.White,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 15.sp),
-                    modifier = Modifier
-                        .weight(1f)
-
+                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp),
+                    maxLines = 6,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
                 )
             }
-
-            Spacer(modifier = Modifier
-                .height(22.dp))
+            Spacer(modifier = Modifier.height(18.dp))
         }
 
         item {
@@ -163,8 +148,7 @@ fun GameDetailScreen(game : Game) {
                 text = "Itens Compráveis",
                 color = Color.White,
                 style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp),
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.padding(vertical = 12.dp)
             )
         }
 
@@ -173,7 +157,7 @@ fun GameDetailScreen(game : Game) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { selectedItem = item }
-                    .padding(vertical = 12.dp),
+                    .padding(vertical = 14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
@@ -182,40 +166,39 @@ fun GameDetailScreen(game : Game) {
                     modifier = Modifier
                         .size(90.dp)
                         .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Fit
                 )
 
-                Spacer(
-                    modifier = Modifier
-                        .width(12.dp)
-                )
+                Spacer(modifier = Modifier.width(12.dp))
 
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
+                    modifier = Modifier.weight(1f)
                 ) {
                     Text(
                         item.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = Color.White,
+                            fontSize = 18.sp
+                        )
                     )
                     Text(
                         item.description,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 15.sp),
+                        color = Color(0xFFD4D4d4),
                         maxLines = 2,
-                        color = Color.White
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
 
                 Text(
                     "$${item.price}",
-                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
-                    color = Color.White
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontSize = 18.sp,
+                        color = Color.White
+                    )
                 )
             }
-
-            HorizontalDivider(thickness = 1.dp)
-        }
+            }
         }
     }
 }
@@ -224,61 +207,64 @@ fun GameDetailScreen(game : Game) {
 fun BottomSheetContent(item: StoreItem, onBuy: () -> Unit) {
     Column (
         modifier = Modifier
+            .fillMaxWidth()
             .padding(22.dp)
             .background(Color(0xFF171A21))
     ) {
-       Row {
-           Box(
+       Row (verticalAlignment = Alignment.CenterVertically) {
+
+           Image(
+               painter = painterResource(item.iconRes),
+               contentDescription = item.name,
                modifier = Modifier
                    .size(110.dp)
-                   .clip(MaterialTheme.shapes.medium)
-                   .background(Color(0xFF171A21)),
-               contentAlignment = Alignment.Center
-           ) {
-               Text("Item\nImage", fontSize = 14.sp)
-           }
+                   .clip(RoundedCornerShape(12.dp)),
+               contentScale = ContentScale.Crop
+           )
 
-           Spacer(modifier = Modifier
-               .width(16.dp))
+           Spacer(modifier = Modifier.width(16.dp))
 
            Column {
                Text(
                    text = item.name,
-                   style = MaterialTheme.typography.titleLarge,
                    color = Color.White,
+                   style = MaterialTheme.typography.titleLarge
                )
                Text(
                    text = item.description,
-                   style = MaterialTheme.typography.bodyMedium,
                    color = Color.White,
+                   style = MaterialTheme.typography.bodyMedium
                )
            }
        }
+        Spacer(modifier = Modifier.height(24.dp))
 
-        Spacer(modifier = Modifier
-            .height(24.dp))
-
-        Row (
+        Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 text = "$${item.price}",
                 color = Color.White,
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier
-                    .weight(1f)
+                modifier = Modifier.weight(1f)
             )
+
             Button(
                 onClick = onBuy,
-                shape = MaterialTheme.shapes.medium
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF66C0F4),
+                    contentColor = Color.Black
+                )
             ) {
                 Text("Compre com 1-click")
             }
         }
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
