@@ -9,15 +9,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -32,6 +34,8 @@ import pt.iade.ei.keydepot.model.StoreItem
 import pt.iade.ei.keydepot.repository.SampleData
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 
 
@@ -83,7 +87,7 @@ fun GameDetailScreen(game : Game) {
                     actionIconContentColor = Color.White
                 ),
                 title = {
-                    Text(text = game.title, fontSize = 20.sp)
+                    Text(text = game.title, fontSize = 25.sp, fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
                     IconButton(onClick = { (context as? ComponentActivity)?.finish() }) {
@@ -116,16 +120,15 @@ fun GameDetailScreen(game : Game) {
                 Row (
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp)
+                        .padding(vertical = 14.dp)
             ) {
                 Image(
                     painter = painterResource(id = game.coverRes),
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .weight(0.65f)
-                        .aspectRatio(16f / 9f)
+                        .size(150.dp)
                         .clip(RoundedCornerShape(16.dp)),
-                    contentScale = ContentScale.Crop
                 )
 
                 Spacer(modifier = Modifier
@@ -135,8 +138,6 @@ fun GameDetailScreen(game : Game) {
                     text = game.subtitle,
                     color = Color.White,
                     style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp),
-                    maxLines = 6,
-                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -147,7 +148,7 @@ fun GameDetailScreen(game : Game) {
             Text(
                 text = "Itens Compráveis",
                 color = Color.White,
-                style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp),
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 28.sp),
                 modifier = Modifier.padding(vertical = 12.dp)
             )
         }
@@ -157,46 +158,57 @@ fun GameDetailScreen(game : Game) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { selectedItem = item }
-                    .padding(vertical = 14.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(vertical = 14.dp)
+                    .height(115.dp),
+                verticalAlignment = Alignment.Top
             ) {
                 Image(
                     painter = painterResource(id = item.iconRes),
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(90.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Fit
+                        .size(115.dp)
+                        .clip(RoundedCornerShape(16.dp)),
+
                 )
 
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(10.dp))
 
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(115.dp),
                 ) {
                     Text(
                         item.name,
                         style = MaterialTheme.typography.titleMedium.copy(
                             color = Color.White,
-                            fontSize = 18.sp
+                            fontSize = 17.sp
                         )
                     )
                     Text(
                         item.description,
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 15.sp),
                         color = Color(0xFFD4D4d4),
-                        maxLines = 2,
+                        maxLines = 4,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
 
-                Text(
-                    "$${item.price}",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontSize = 18.sp,
-                        color = Color.White
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    Text(
+                        "$${item.price}",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontSize = 23.sp,
+                            color = Color.White
+                        )
                     )
-                )
+                }
             }
             }
         }
@@ -217,7 +229,7 @@ fun BottomSheetContent(item: StoreItem, onBuy: () -> Unit) {
                painter = painterResource(item.iconRes),
                contentDescription = item.name,
                modifier = Modifier
-                   .size(110.dp)
+                   .size(115.dp)
                    .clip(RoundedCornerShape(12.dp)),
                contentScale = ContentScale.Crop
            )
@@ -228,12 +240,16 @@ fun BottomSheetContent(item: StoreItem, onBuy: () -> Unit) {
                Text(
                    text = item.name,
                    color = Color.White,
-                   style = MaterialTheme.typography.titleLarge
+                   style = MaterialTheme.typography.headlineSmall,
+                   fontWeight = FontWeight.Bold
                )
                Text(
                    text = item.description,
                    color = Color.White,
-                   style = MaterialTheme.typography.bodyMedium
+                   style = MaterialTheme.typography.bodyMedium,
+                   modifier = Modifier
+                       .heightIn(max = 120.dp)
+                       .verticalScroll(rememberScrollState())
                )
            }
        }
