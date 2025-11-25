@@ -1,5 +1,6 @@
 package pt.iade.ei.keydepot
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -33,6 +34,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.material3.ExperimentalMaterial3Api
 
 
 class GameDetailActivity : ComponentActivity() {
@@ -60,7 +62,7 @@ fun GameDetailScreen(game : Game) {
             containerColor = Color(0xFF171A21),
             onDismissRequest = { selectedItem = null }
         ) {
-            BottomSheetContent(
+            ItemBottomSheet(
                 item = selectedItem!!,
                 onBuy = {
                     Toast.makeText(
@@ -73,146 +75,167 @@ fun GameDetailScreen(game : Game) {
             )
         }
     }
-    Scaffold (
+    Scaffold(
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1B2838),
-                    navigationIconContentColor = Color.White,
-                    titleContentColor = Color.White,
-                    actionIconContentColor = Color.White
-                ),
-                title = {
-                    Text(text = game.title, fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                },
-                navigationIcon = {
-                    IconButton(onClick = { (context as? ComponentActivity)?.finish() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                            contentDescription = "Voltar"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            imageVector = Icons.Outlined.FavoriteBorder,
-                            contentDescription = "Favorito"
-                        )
-                    }
-                }
-            )
-        },
+            GameTopBar(game.title) },
         containerColor = Color(0xFF1B2838)
-    ) { innerPadding ->
+    ) { padding ->
 
-        LazyColumn (
+        LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .padding(padding)
+                .padding(16.dp)
         ) {
-            item {
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 14.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = game.coverRes),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(150.dp)
-                        .clip(RoundedCornerShape(16.dp)),
-                )
+            item { GameHeader(game) }
+            item { SectionTitle("Itens Compraveis") }
 
-                Spacer(modifier = Modifier
-                    .width(16.dp))
-
-                Text(
-                    text = game.subtitle,
-                    color = Color.White,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp),
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            Spacer(modifier = Modifier.height(18.dp))
-        }
-
-        item {
-            Text(
-                text = "Itens Compráveis",
-                color = Color.White,
-                style = MaterialTheme.typography.titleMedium.copy(fontSize = 28.sp),
-                modifier = Modifier.padding(vertical = 12.dp)
-            )
-        }
-
-        items(game.items) { item ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { selectedItem = item }
-                    .padding(vertical = 14.dp)
-                    .height(115.dp),
-                verticalAlignment = Alignment.Top
-            ) {
-                Image(
-                    painter = painterResource(id = item.iconRes),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(115.dp)
-                        .clip(RoundedCornerShape(16.dp)),
-
-                )
-
-                Spacer(modifier = Modifier.width(10.dp))
-
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(115.dp),
-                ) {
-                    Text(
-                        item.name,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = Color.White,
-                            fontSize = 17.sp
-                        )
-                    )
-                    Text(
-                        item.description,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 15.sp),
-                        color = Color(0xFFD4D4d4),
-                        maxLines = 4,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.BottomEnd
-                ) {
-                    Text(
-                        "$${item.price}",
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontSize = 23.sp,
-                            color = Color.White
-                        )
-                    )
-                }
-            }
+            items(game.items) { item ->
+                ItemRow(item) { selectedItem = item }
             }
         }
     }
 }
 
+@SuppressLint("ContextCastToActivity")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheetContent(item: StoreItem, onBuy: () -> Unit) {
+fun GameTopBar(title: String) {
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xFF1B2838),
+            titleContentColor = Color.White,
+            actionIconContentColor = Color.White,
+            navigationIconContentColor = Color.White
+        ),
+        title = {
+            Text(
+                text = title,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        navigationIcon = {
+            val context = LocalContext.current
+            IconButton(onClick = { (context as? ComponentActivity)?.finish() }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                    contentDescription = "Voltar"
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = {}) {
+                Icon(Icons.Outlined.FavoriteBorder, contentDescription = "Favorito")
+            }
+        }
+    )
+}
+
+
+@Composable
+fun GameHeader(game: Game) {
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 14.dp)
+    ) {
+        Image(
+            painter = painterResource(id = game.coverRes),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(150.dp)
+                .clip(RoundedCornerShape(16.dp))
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Text(
+            text = game.subtitle,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = Color.White,
+                fontSize = 16.sp
+            ),
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+fun SectionTitle(text: String) {
+    Text(
+        text = text,
+        color = Color.White,
+        style = MaterialTheme.typography.titleMedium.copy(fontSize = 26.sp),
+        modifier = Modifier.padding(vertical = 12.dp)
+    )
+}
+
+@Composable
+fun ItemRow(item: StoreItem, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 14.dp),
+        verticalAlignment = Alignment.Top
+    ) {
+        Image(
+            painter = painterResource(id = item.iconRes),
+            contentDescription = null,
+            modifier = Modifier
+                .size(140.dp)
+                .clip(RoundedCornerShape(16.dp)),
+            contentScale = ContentScale.Crop
+        )
+
+        Spacer(modifier = Modifier.width(10.dp))
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+        ) {
+            // Nome
+            Text(
+                text = item.name,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = Color.White,
+                    fontSize = 17.sp
+                )
+            )
+
+            Text(
+                text = item.description,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color(0xFFD4D4D4),
+                    fontSize = 15.sp
+                ),
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+
+            Text(
+                text = "$${item.price}",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .align (Alignment.End)
+            )
+        }
+    }
+}
+
+
+@Composable
+fun ItemBottomSheet(item: StoreItem, onBuy: () -> Unit) {
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -277,18 +300,46 @@ fun BottomSheetContent(item: StoreItem, onBuy: () -> Unit) {
 }
 
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewGameDetail() {
-    GameDetailScreen(game = SampleData.games.first())
+    GameDetailScreen(SampleData.games.first())
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewGameTopBar() {
+    GameTopBar("Sid Meier’s Civilization® VI")
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewHeader() {
+    Box(modifier = Modifier.background(Color(0xFF1B2838))) {
+        GameHeader(SampleData.games.first())
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewItemRow() {
+    Box(modifier = Modifier.background(Color(0xFF1B2838))) {
+        ItemRow(SampleData.games.first().items.first()) {}
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSectionTitle() {
+    Box(modifier = Modifier.background(Color(0xFF1B2838))) {
+        SectionTitle("Itens Compráveis")
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewBottomSheet() {
-    BottomSheetContent(
-        item = SampleData.games.first().items.first(),
-        onBuy = {}
-    )
+    Box(modifier = Modifier.background(Color(0xFF171A21))) {
+       ItemBottomSheet(SampleData.games.first().items.first()) {}    
+    }
 }
