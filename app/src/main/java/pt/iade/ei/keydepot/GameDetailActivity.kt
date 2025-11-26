@@ -41,7 +41,9 @@ class GameDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val game = intent.getParcelableExtra<Game>("game") ?: return
+        val index = intent.getIntExtra("gameIndex", -1)
+
+        val game = SampleData.games[index]
 
         setContent {
             GameDetailScreen(game = game)
@@ -196,9 +198,7 @@ fun ItemRow(item: StoreItem, onClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxHeight()
         ) {
-            // Nome
             Text(
                 text = item.name,
                 style = MaterialTheme.typography.titleMedium.copy(
@@ -219,7 +219,7 @@ fun ItemRow(item: StoreItem, onClick: () -> Unit) {
             )
 
             Text(
-                text = "$${item.price}",
+                text = "€${item.price}",
                 style = MaterialTheme.typography.bodyLarge.copy(
                     color = Color.White,
                     fontSize = 20.sp,
@@ -279,7 +279,7 @@ fun ItemBottomSheet(item: StoreItem, onBuy: () -> Unit) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "$${item.price}",
+                text = "€${item.price}",
                 color = Color.White,
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.weight(1f)

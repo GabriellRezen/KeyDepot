@@ -24,7 +24,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
@@ -140,7 +139,7 @@ fun GameList(games: List<Game>) {
         items(games) { game ->
             GameCard(game) {
                 val intent = Intent(context, GameDetailActivity::class.java)
-                intent.putExtra("game",game)
+                intent.putExtra("gameIndex", SampleData.games.indexOf(game))
                 context.startActivity(intent)
             }
             Spacer(
@@ -216,7 +215,7 @@ fun BottomBar() {
             selected = false,
             onClick = {},
             icon = {
-                Icon(Icons.Filled.Archive,
+                Icon(painter = painterResource(R.drawable.outline_archive_24),
                     contentDescription = null ) },
             label = { Text("Histórico") },
             colors = NavigationBarItemDefaults.colors(
