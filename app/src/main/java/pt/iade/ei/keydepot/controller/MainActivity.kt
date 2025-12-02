@@ -1,11 +1,9 @@
-package pt.iade.ei.keydepot
+package pt.iade.ei.keydepot.controller
 
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,7 +28,6 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -47,9 +44,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import pt.iade.ei.keydepot.R
 import pt.iade.ei.keydepot.model.Game
 import pt.iade.ei.keydepot.repository.SampleData
-import pt.iade.ei.keydepot.ui.theme.KeyDepotTheme
 
 
 class MainActivity : ComponentActivity() {

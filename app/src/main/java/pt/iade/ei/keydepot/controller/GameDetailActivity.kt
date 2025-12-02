@@ -1,4 +1,4 @@
-package pt.iade.ei.keydepot
+package pt.iade.ei.keydepot.controller
 
 import android.annotation.SuppressLint
 import android.os.Bundle

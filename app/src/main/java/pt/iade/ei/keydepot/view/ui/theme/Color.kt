@@ -1,4 +1,4 @@
-package pt.iade.ei.keydepot.ui.theme
+package pt.iade.ei.keydepot.view.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
