@@ -245,7 +245,7 @@ fun BottomBar() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun PreviewMain() {
     MainScreen(games = SampleData.games)
